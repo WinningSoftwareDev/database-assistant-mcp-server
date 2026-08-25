@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+
+error_reporting(0);
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use App\DatabaseService;
+use App\Server;
+
+$configPath = $argv[1] ?? null;
+
+if ($configPath === null) {
+    fwrite(STDERR, "Usage: app <config.yaml>\n");
+    exit(1);
+}
+
+if (!file_exists($configPath)) {
+    fwrite(STDERR, "Config file not found: {$configPath}\n");
+    exit(1);
+}
+
+$config = yaml_parse(file_get_contents($configPath));
+
+$dbService = new DatabaseService($config);
+$server = new Server($dbService);
+
+$server->listen();

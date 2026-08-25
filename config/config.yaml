@@ -1,0 +1,11 @@
+databases:
+  tnex:
+    host: 'localhost:52014'
+    username: 'root'
+    password: 'docker'
+    port: 3306
+  storybox:
+    host: 'storybox-mysql'
+    username: 'root'
+    password: 'docker'
+    port: 3306
