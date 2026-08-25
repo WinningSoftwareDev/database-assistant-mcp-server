@@ -1,0 +1,17 @@
+{
+    "name": "winningsoftware/database-assistant-mcp-server",
+    "description": "A PHP based MCP server for querying SQL databases.",
+    "type": "library",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Daniel Winning",
+            "email": "daniel@winningsoftware.co.uk"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}
