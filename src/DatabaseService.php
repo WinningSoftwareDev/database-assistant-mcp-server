@@ -29,6 +29,7 @@ class DatabaseService
     {
         if (!isset($this->config['databases'][$target])) {
             $valid = implode(', ', array_keys($this->config['databases']));
+
             throw new \RuntimeException(sprintf('Unknown database "%s". Available aliases: %s', $target, $valid));
         }
 

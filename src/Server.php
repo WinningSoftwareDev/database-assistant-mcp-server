@@ -32,24 +32,26 @@ class Server
                 case 'initialize':
                     $this->respond($id, [
                         'protocolVersion' => '2024-11-05',
-                        'capabilities' => ['tools' => (object)[]],
+                        'capabilities' => ['tools' => (object) []],
                         'serverInfo' => [
                             'name' => 'winningsoftware/database-assistant-mcp-server',
                             'version' => '0.1.0',
                         ],
                     ]);
+
                     break;
 
                 case 'tools/list':
                     $this->respond($id, ['tools' => $this->getToolsSchema()]);
+
                     break;
 
                 case 'tools/call':
                     $this->handleToolCall($id, $request['params'] ?? []);
+
                     break;
 
                 case 'notifications/initialized':
-                    // Protocol requirement: client notifies initialization complete
                     break;
             }
         }
@@ -66,16 +68,16 @@ class Server
                     'properties' => [
                         'target' => [
                             'type' => 'string',
-                            'description' => 'Target DB alias name (e.g. app_one, app_two)'
+                            'description' => 'Target DB alias name (e.g. app_one, app_two)',
                         ],
                         'sql' => [
                             'type' => 'string',
-                            'description' => 'The SELECT query to execute'
-                        ]
+                            'description' => 'The SELECT query to execute',
+                        ],
                     ],
-                    'required' => ['target', 'sql']
-                ]
-            ]
+                    'required' => ['target', 'sql'],
+                ],
+            ],
         ];
     }
 
@@ -91,16 +93,16 @@ class Server
                 $this->respond($id, [
                     'content' => [[
                         'type' => 'text',
-                        'text' => json_encode($results, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT)
-                    ]]
+                        'text' => json_encode($results, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT),
+                    ]],
                 ]);
             } catch (\Exception $e) {
                 $this->respond($id, [
                     'content' => [[
                         'type' => 'text',
-                        'text' => "Error: " . $e->getMessage()
+                        'text' => 'Error: ' . $e->getMessage(),
                     ]],
-                    'isError' => true
+                    'isError' => true,
                 ]);
             }
         }
@@ -116,10 +118,10 @@ class Server
         }
 
         echo json_encode([
-                'jsonrpc' => '2.0',
-                'id' => $id,
-                'result' => $result
-            ], JSON_THROW_ON_ERROR) . "\n";
+            'jsonrpc' => '2.0',
+            'id' => $id,
+            'result' => $result,
+        ], JSON_THROW_ON_ERROR) . "\n";
 
         flush();
     }
