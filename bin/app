@@ -22,8 +22,6 @@ if (!file_exists($configPath)) {
 
 $config = yaml_parse(file_get_contents($configPath));
 
-die(var_dump($config));
-
 $dbService = new DatabaseService($config);
 $server = new Server($dbService);
 
