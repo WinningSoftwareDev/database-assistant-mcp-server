@@ -11,35 +11,15 @@ A lightweight PHP-based [Model Context Protocol](https://modelcontextprotocol.io
 
 ## Requirements
 
-**Docker (recommended):**
-
-- Docker
-
-**Or run natively:**
-
 - PHP 8.4+
 - `ext-pdo` and `ext-pdo_mysql`
 - `ext-yaml` (for config parsing)
 
 ## Installation
 
-### Docker (recommended)
-
-Pull the image from GitHub Container Registry:
-
-```bash
-docker pull ghcr.io/winningsoftware/database-assistant-mcp-server:latest
-```
-
-No other dependencies required.
-
-### Composer (native PHP)
-
 ```bash
 composer global require winningsoftware/database-assistant-mcp-server
 ```
-
-Requires PHP 8.4+ with `ext-pdo`, `ext-pdo_mysql`, and `ext-yaml`.
 
 ## Configuration
 
@@ -85,9 +65,8 @@ databases:
 
 ## Usage
 
-Your MCP client starts and manages the server process automatically — you don't need to run it manually. Just add it to your client config (e.g. `mcp.json`):
-
-### PHP (direct)
+Your MCP client starts and manages the server process automatically — you don't need to run it manually. Just add it to 
+your client config (e.g. `mcp.json`):
 
 ```json
 {
@@ -106,97 +85,15 @@ Your MCP client starts and manages the server process automatically — you don'
 If installed globally via Composer, the binary path will typically be `~/.composer/vendor/bin/database-assistant-mcp-server` 
 or `~/.config/composer/vendor/bin/database-assistant-mcp-server`.
 
-### Docker
-
-No PHP installation required — just Docker.
-
-#### Connecting to databases on your local machine
-
-When running via Docker, the server is inside a container and cannot reach your host machine's databases using `localhost` or `127.0.0.1` by default. You also **must not** use `localhost` as the host in your config — MySQL clients interpret `localhost` as a Unix socket connection, and the socket does not exist inside the container.
-
-Choose the setup for your operating system:
-
-#### Linux
-
-Use `--network host` so the container shares your host's network stack. Set the database host to `127.0.0.1` in your config (not `localhost`).
-
-```yaml
-databases:
-  my_app:
-    host: '127.0.0.1'
-    # ...
-```
-
-```json
-{
-  "mcpServers": {
-    "database-assistant": {
-      "command": "docker",
-      "args": [
-        "run", "--rm", "-i", "--network", "host",
-        "-v", "/path/to/your/config.yaml:/config.yaml:ro",
-        "ghcr.io/winningsoftware/database-assistant-mcp-server:latest",
-        "/config.yaml"
-      ]
-    }
-  }
-}
-```
-
-#### macOS / Windows
-
-`--network host` is not supported on macOS or Windows. Instead, use `host.docker.internal` as the database host in your config — Docker Desktop resolves this to the host machine automatically.
-
-```yaml
-databases:
-  my_app:
-    host: 'host.docker.internal'
-    # ...
-```
-
-```json
-{
-  "mcpServers": {
-    "database-assistant": {
-      "command": "docker",
-      "args": [
-        "run", "--rm", "-i",
-        "-v", "/path/to/your/config.yaml:/config.yaml:ro",
-        "ghcr.io/winningsoftware/database-assistant-mcp-server:latest",
-        "/config.yaml"
-      ]
-    }
-  }
-}
-```
-
-#### Remote databases
-
-If your databases are on a remote host (not the machine running Docker), no special networking is needed. Just use the remote host/IP in your config and the default setup works as-is:
-
-```json
-{
-  "mcpServers": {
-    "database-assistant": {
-      "command": "docker",
-      "args": [
-        "run", "--rm", "-i",
-        "-v", "/path/to/your/config.yaml:/config.yaml:ro",
-        "ghcr.io/winningsoftware/database-assistant-mcp-server:latest",
-        "/config.yaml"
-      ]
-    }
-  }
-}
-```
-
 ## AI Skill File
 
-A `SKILL.md` file is included in the project root. Copy it into your AI client's skills directory to give the assistant context on how to use this server effectively (schema discovery workflow, output formatting, etc.).
+A `SKILL.md` file is included in the project root. Copy it into your AI client's skills directory to give the assistant 
+context on how to use this server effectively (schema discovery workflow, output formatting, etc.).
 
 ## Security Considerations
 
-- The server enforces read-only access at the application level. Only `SELECT`, `SHOW`, `DESCRIBE`, and `EXPLAIN` statements are executed.
+- The server enforces read-only access at the application level. Only `SELECT`, `SHOW`, `DESCRIBE`, and `EXPLAIN` 
+statements are executed.
 - For defence in depth, connect with a MySQL user that has read-only privileges.
 - Keep your config YAML outside of version control — it contains credentials.
 

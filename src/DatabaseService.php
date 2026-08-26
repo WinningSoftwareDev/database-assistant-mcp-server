@@ -18,28 +18,18 @@ namespace App;
 class DatabaseService
 {
     /**
-     * @var ToolConfig
-     */
-    private array $config;
-
-    /**
      * @var array<string, \PDO>
      */
     private array $connections = [];
 
     /**
-     * @param array<string, mixed> $config
+     * @param ToolConfig $config
      */
-    public function __construct(array $config)
+    public function __construct(private readonly array $config)
     {
         if (!ConfigValidator::validate($config)) {
             throw new \RuntimeException('Invalid configuration');
         }
-
-        /** @var ToolConfig $c */
-        $c = $config;
-
-        $this->config = $c;
     }
 
     /**

@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace App;
 
-class Server
+readonly class Server
 {
-    private DatabaseService $dbService;
-
-    public function __construct(DatabaseService $dbService)
+    public function __construct(private DatabaseService $databaseService)
     {
-        $this->dbService = $dbService;
     }
 
     /**
@@ -66,7 +63,7 @@ class Server
      *     name: string,
      *     description: string,
      *     inputSchema: array{
-     *         type: string,
+     *         type: 'object',
      *         properties: array<string, array<string, string>>,
      *         required: string[],
      *     },
@@ -110,7 +107,7 @@ class Server
             try {
                 $target = is_string($args['target']) ? $args['target'] : '';
                 $sql = is_string($args['sql']) ? $args['sql'] : '';
-                $results = $this->dbService->query($target, $sql);
+                $results = $this->databaseService->query($target, $sql);
 
                 $this->respond($id, [
                     'content' => [[
