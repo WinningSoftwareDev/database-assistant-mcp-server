@@ -1,0 +1,8 @@
+.git
+.github
+.idea
+.php-cs-fixer.cache
+vendor
+phpstan.neon
+SKILL.md
+README.md

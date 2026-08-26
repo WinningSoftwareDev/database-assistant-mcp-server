@@ -82,7 +82,8 @@ class DatabaseService
         }
 
         $db = $this->config['databases'][$target];
-        $dsn = "mysql:host={$db['host']};charset=utf8mb4";
+        $port = $db['port'] ?? 3306;
+        $dsn = "mysql:host={$db['host']};port={$port};charset=utf8mb4";
 
         if (!empty($db['name'])) {
             $dsn .= ";dbname={$db['name']}";
