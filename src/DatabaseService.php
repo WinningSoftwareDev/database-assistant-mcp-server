@@ -10,7 +10,7 @@ namespace App;
  *         host: string,
  *         username: string,
  *         password: string,
- *         port: int | numeric-string,
+ *         port?: int | numeric-string,
  *         name?: string,
  *     }>,
  * }
