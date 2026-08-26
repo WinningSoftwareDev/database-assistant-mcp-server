@@ -3,7 +3,18 @@
 
 error_reporting(0);
 
-require __DIR__ . '/../vendor/autoload.php';
+$autoloadPaths = [
+    'development' => sprintf('%s/vendor/autoload.php', dirname(__DIR__)),
+    'installed' => sprintf('%s/autoload.php', dirname(__DIR__, 3)),
+];
+
+if (file_exists($autoloadPaths['installed'])) {
+    require_once $autoloadPaths['installed'];
+} elseif (file_exists($autoloadPaths['development'])) {
+    require_once $autoloadPaths['development'];
+} else {
+    throw new \RuntimeException('Autoloader not found');
+}
 
 use App\DatabaseService;
 use App\Server;
@@ -15,13 +26,17 @@ if ($configPath === null) {
     exit(1);
 }
 
-if (!file_exists($configPath)) {
+$configYaml = file_get_contents($configPath);
+
+if (!is_string($configYaml)) {
     fwrite(STDERR, "Config file not found: {$configPath}\n");
     exit(1);
 }
 
-$config = yaml_parse(file_get_contents($configPath));
-
+/**
+ * @var array<string, mixed> $config
+ */
+$config = yaml_parse($configYaml);
 $dbService = new DatabaseService($config);
 $server = new Server($dbService);
 
