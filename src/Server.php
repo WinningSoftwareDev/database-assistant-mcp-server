@@ -21,7 +21,7 @@ class Server
         while ($line = fgets(STDIN)) {
             $request = json_decode($line, true, 512, JSON_THROW_ON_ERROR);
 
-            if (!$request) {
+            if (!is_array($request)) {
                 continue;
             }
 
@@ -47,7 +47,11 @@ class Server
                     break;
 
                 case 'tools/call':
-                    $this->handleToolCall($id, $request['params'] ?? []);
+                    /**
+                     * @var array{name: string, arguments: array<string, mixed>} $params
+                     */
+                    $params = is_array($request['params']) ? $request['params'] : [];
+                    $this->handleToolCall($id, $params);
 
                     break;
 
@@ -57,6 +61,17 @@ class Server
         }
     }
 
+    /**
+     * @return array<int, array{
+     *     name: string,
+     *     description: string,
+     *     inputSchema: array{
+     *         type: string,
+     *         properties: array<string, array<string, string>>,
+     *         required: string[],
+     *     },
+     * }>
+     */
     private function getToolsSchema(): array
     {
         return [
@@ -81,14 +96,21 @@ class Server
         ];
     }
 
+    /**
+     * @param array{name: string, arguments: array<string, mixed>} $params
+     *
+     * @throws \JsonException
+     */
     private function handleToolCall(mixed $id, array $params): void
     {
-        $toolName = $params['name'] ?? '';
-        $args = $params['arguments'] ?? [];
+        $toolName = $params['name'];
+        $args = $params['arguments'];
 
         if ($toolName === 'query_database') {
             try {
-                $results = $this->dbService->query($args['target'] ?? '', $args['sql'] ?? '');
+                $target = is_string($args['target']) ? $args['target'] : '';
+                $sql = is_string($args['sql']) ? $args['sql'] : '';
+                $results = $this->dbService->query($target, $sql);
 
                 $this->respond($id, [
                     'content' => [[
@@ -109,6 +131,8 @@ class Server
     }
 
     /**
+     * @param array<int|string, mixed> $result
+     *
      * @throws \JsonException
      */
     private function respond(mixed $id, array $result): void

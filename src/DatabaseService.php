@@ -4,8 +4,22 @@ declare(strict_types=1);
 
 namespace App;
 
+/**
+ * @phpstan-type ToolConfig array{
+ *     databases: array<string, array{
+ *         host: string,
+ *         username: string,
+ *         password: string,
+ *         port: int | numeric-string,
+ *         name?: string,
+ *     }>,
+ * }
+ */
 class DatabaseService
 {
+    /**
+     * @var ToolConfig
+     */
     private array $config;
 
     /**
@@ -13,16 +27,24 @@ class DatabaseService
      */
     private array $connections = [];
 
+    /**
+     * @param array<string, mixed> $config
+     */
     public function __construct(array $config)
     {
         if (!ConfigValidator::validate($config)) {
             throw new \RuntimeException('Invalid configuration');
         }
 
-        $this->config = $config;
+        /** @var ToolConfig $c */
+        $c = $config;
+
+        $this->config = $c;
     }
 
     /**
+     * @return array<int, array<string, mixed>>
+     *
      * @throws \Exception
      */
     public function query(string $target, string $sql): array
@@ -39,8 +61,18 @@ class DatabaseService
         }
 
         $pdo = $this->getConnection($target);
+        $query = $pdo->query($sql);
 
-        return $pdo->query($sql)->fetchAll(\PDO::FETCH_ASSOC);
+        if (!$query) {
+            throw new \RuntimeException('Query failed');
+        }
+
+        /**
+         * @var array<int, array<string, mixed>> $result
+         */
+        $result = $query->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $result;
     }
 
     private function getConnection(string $target): \PDO
@@ -51,6 +83,10 @@ class DatabaseService
 
         $db = $this->config['databases'][$target];
         $dsn = "mysql:host={$db['host']};charset=utf8mb4";
+
+        if (!empty($db['name'])) {
+            $dsn .= ";dbname={$db['name']}";
+        }
 
         $pdo = new \PDO($dsn, $db['username'], $db['password'], [
             \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,

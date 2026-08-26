@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-error_reporting(0);
+//error_reporting(0);
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -21,6 +21,8 @@ if (!file_exists($configPath)) {
 }
 
 $config = yaml_parse(file_get_contents($configPath));
+
+die(var_dump($config));
 
 $dbService = new DatabaseService($config);
 $server = new Server($dbService);

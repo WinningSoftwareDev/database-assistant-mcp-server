@@ -44,6 +44,7 @@ databases:
     username: 'root'
     password: 'secret'
     port: 3306
+    name: 'my_app_db'
   analytics:
     host: '192.168.1.50'
     username: 'readonly'
@@ -59,6 +60,7 @@ Each key under `databases` becomes a **target alias** that the AI client uses wh
 | `username` | string | yes      | —       | Database user                  |
 | `password` | string | yes      | —       | Database password              |
 | `port`     | int    | no       | 3306    | MySQL port                     |
+| `name`     | string | no       | —       | Default database/schema name   |
 
 ### Example
 
