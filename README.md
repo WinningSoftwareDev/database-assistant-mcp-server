@@ -90,7 +90,7 @@ A `SKILL.md` file is included in the project root. Copy it into your AI client's
 ## Security Considerations
 
 - The server enforces read-only access at the application level. Only `SELECT`, `SHOW`, `DESCRIBE`, and `EXPLAIN` statements are executed.
-- For defence in depth, connect with a MySQL user that has readonly privileges.
+- For defence in depth, connect with a MySQL user that has read-only privileges.
 - Keep your config YAML outside of version control — it contains credentials.
 
 ## License
