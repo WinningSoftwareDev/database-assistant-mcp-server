@@ -22,7 +22,7 @@ use App\Server;
 $configPath = $argv[1] ?? null;
 
 if ($configPath === null) {
-    fwrite(STDERR, "Usage: app <config.yaml>\n");
+    fwrite(STDERR, "Usage: database-assistant-mcp-server <config.yaml>\n");
     exit(1);
 }
 
