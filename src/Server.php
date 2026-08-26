@@ -32,7 +32,7 @@ readonly class Server
                         'capabilities' => ['tools' => (object) []],
                         'serverInfo' => [
                             'name' => 'winningsoftware/database-assistant-mcp-server',
-                            'version' => '0.1.0',
+                            'version' => '0.3.0',
                         ],
                     ]);
 
