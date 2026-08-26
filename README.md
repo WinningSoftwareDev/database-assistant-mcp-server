@@ -11,24 +11,14 @@ A lightweight PHP-based [Model Context Protocol](https://modelcontextprotocol.io
 
 ## Requirements
 
-- PHP 8.1+
+- PHP 8.4+
 - `ext-pdo` and `ext-pdo_mysql`
 - `ext-yaml` (for config parsing)
 
 ## Installation
 
-### Composer (recommended)
-
 ```bash
 composer global require winningsoftware/database-assistant-mcp-server
-```
-
-### Manual
-
-```bash
-curl -L https://github.com/winningsoftware/database-assistant-mcp-server/archive/refs/heads/main.tar.gz | tar -xz
-cd database-assistant-mcp-server-main
-composer install --no-dev
 ```
 
 ## Configuration
@@ -83,7 +73,7 @@ Your MCP client starts and manages the server process automatically — you don'
     "database-assistant": {
       "command": "php",
       "args": [
-        "/path/to/database-assistant-mcp-server/bin/app",
+        "/path/to/database-assistant-mcp-server/bin/database-assistant-mcp-server",
         "/path/to/your/config.yaml"
       ]
     }
@@ -91,7 +81,7 @@ Your MCP client starts and manages the server process automatically — you don'
 }
 ```
 
-If installed globally via Composer, the binary path will typically be `~/.composer/vendor/winningsoftware/database-assistant-mcp-server/bin/app`.
+If installed globally via Composer, the binary path will typically be `~/.composer/vendor/bin/database-assistant-mcp-server`.
 
 ## AI Skill File
 
@@ -100,7 +90,7 @@ A `SKILL.md` file is included in the project root. Copy it into your AI client's
 ## Security Considerations
 
 - The server enforces read-only access at the application level. Only `SELECT`, `SHOW`, `DESCRIBE`, and `EXPLAIN` statements are executed.
-- For defence in depth, connect with a MySQL user that only has `SELECT` privileges.
+- For defence in depth, connect with a MySQL user that has readonly privileges.
 - Keep your config YAML outside of version control — it contains credentials.
 
 ## License
